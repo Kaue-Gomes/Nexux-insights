@@ -1,4 +1,4 @@
-import { LogOut, Moon, Search, Sun } from "lucide-react";
+import { LogOut, Menu, Moon, Search, Sun } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/providers/auth-provider";
+import { useSidebar } from "@/providers/sidebar-provider";
 import { useTheme } from "@/providers/theme-provider";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -18,6 +19,7 @@ import { NotificationBell } from "./notification-bell";
 export function AppHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   const { profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { setMobileOpen } = useSidebar();
   const navigate = useNavigate();
 
   const initials =
@@ -41,7 +43,16 @@ export function AppHeader({ title, subtitle }: { title: string; subtitle?: strin
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border">
-      <div className="flex items-center gap-4 px-4 md:px-8 h-16">
+      <div className="flex items-center gap-3 px-4 md:px-8 h-16 md:gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0 lg:hidden"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Abrir menu de navegação"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
         <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl font-semibold text-foreground truncate">{title}</h1>
           {subtitle && <p className="text-xs text-muted-foreground hidden md:block">{subtitle}</p>}

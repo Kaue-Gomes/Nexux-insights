@@ -1,53 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  BarChart3,
-  Bell,
-  CheckSquare,
-  ChevronLeft,
-  ChevronRight,
-  FolderKanban,
-  LayoutDashboard,
-  Settings,
-  Sparkles,
-  Users,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { NexusLogo } from "@/components/brand/nexus-logo";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/providers/sidebar-provider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-type NavItem = { to: string; label: string; icon: LucideIcon };
-type NavSection = { label: string; items: NavItem[] };
-
-const sections: NavSection[] = [
-  {
-    label: "Principal",
-    items: [
-      { to: "/", label: "Dashboard", icon: LayoutDashboard },
-      { to: "/projects", label: "Projetos", icon: FolderKanban },
-      { to: "/tasks", label: "Tarefas", icon: CheckSquare },
-    ],
-  },
-  {
-    label: "Gestão",
-    items: [
-      { to: "/teams", label: "Equipes", icon: Users },
-      { to: "/reminders", label: "Lembretes", icon: Bell },
-      { to: "/reports", label: "Relatórios", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Geral",
-    items: [{ to: "/settings", label: "Configurações", icon: Settings }],
-  },
-];
+import { appNavSections, isNavItemActive } from "./nav-config";
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { collapsed, toggle } = useSidebar();
-
-  const isActive = (to: string) => pathname === to || (to !== "/" && pathname.startsWith(to));
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -83,7 +45,7 @@ export function AppSidebar() {
         </div>
 
         <nav className="flex-1 px-2 py-4 space-y-5 overflow-y-auto">
-          {sections.map((section) => (
+          {appNavSections.map((section) => (
             <div key={section.label} className="space-y-1">
               {!collapsed && (
                 <span className="block px-3 pb-1 text-[10px] uppercase tracking-wider font-semibold text-sidebar-foreground/40">
@@ -91,7 +53,7 @@ export function AppSidebar() {
                 </span>
               )}
               {section.items.map((item) => {
-                const active = isActive(item.to);
+                const active = isNavItemActive(pathname, item.to);
                 const Icon = item.icon;
 
                 const link = (
