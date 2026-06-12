@@ -6,17 +6,17 @@ Plataforma de dashboard empresarial construída com **TanStack Start + Supabase*
 
 ## Stack Implementada (MVP)
 
-| Camada | Tecnologia | Função |
-|--------|------------|--------|
-| Frontend | TanStack Start + React 19 + TypeScript | Aplicação full-stack |
-| UI | Tailwind CSS 4 + shadcn/ui | Design system |
-| Gráficos | Recharts | Visualização de dados |
-| Formulários | React Hook Form + Zod | Validação |
-| Estado async | TanStack React Query | Cache e mutations |
-| Backend | TanStack Start Server Functions | API server-side |
-| Banco | Supabase PostgreSQL | Persistência |
-| Auth | Supabase Auth | Login e registro |
-| Segurança | Row Level Security (RLS) | Isolamento por usuário |
+| Camada       | Tecnologia                             | Função                 |
+| ------------ | -------------------------------------- | ---------------------- |
+| Frontend     | TanStack Start + React 19 + TypeScript | Aplicação full-stack   |
+| UI           | Tailwind CSS 4 + shadcn/ui             | Design system          |
+| Gráficos     | Recharts                               | Visualização de dados  |
+| Formulários  | React Hook Form + Zod                  | Validação              |
+| Estado async | TanStack React Query                   | Cache e mutations      |
+| Backend      | TanStack Start Server Functions        | API server-side        |
+| Banco        | Supabase PostgreSQL                    | Persistência           |
+| Auth         | Supabase Auth                          | Login e registro       |
+| Segurança    | Row Level Security (RLS)               | Isolamento por usuário |
 
 ## Arquitetura
 
@@ -92,11 +92,11 @@ O plano gratuito do Supabase limita o envio de e-mails de confirmação (~2/hora
 
 ### Credenciais (projeto `yldqdnykxwbtogvhtebx`)
 
-| Variável | Valor |
-|----------|-------|
-| `VITE_SUPABASE_URL` | `https://yldqdnykxwbtogvhtebx.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Chave anon (JWT) — ver `.env.example` ou painel → Settings → API |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | Chave `sb_publishable_...` — alternativa moderna |
+| Variável                        | Valor                                                            |
+| ------------------------------- | ---------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`             | `https://yldqdnykxwbtogvhtebx.supabase.co`                       |
+| `VITE_SUPABASE_ANON_KEY`        | Chave anon (JWT) — ver `.env.example` ou painel → Settings → API |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Chave `sb_publishable_...` — alternativa moderna                 |
 
 ## Funcionalidades MVP
 
@@ -111,14 +111,14 @@ O plano gratuito do Supabase limita o envio de e-mails de confirmação (~2/hora
 
 ## Roadmap Futuro
 
-| Fase | Entregável | Status |
-|------|-----------|--------|
-| 7 | Docker Compose | Planejado |
-| 8 | CI/CD + Deploy | Planejado |
-| — | python-service (FastAPI) — PDF, relatórios avançados | Planejado |
-| — | Redis cache / pub-sub | Planejado |
-| — | WebSocket / notificações realtime | Planejado |
-| — | backend/ Express separado (se necessário escalar) | Planejado |
+| Fase | Entregável                                           | Status    |
+| ---- | ---------------------------------------------------- | --------- |
+| 7    | Docker Compose                                       | Planejado |
+| 8    | CI/CD + Deploy                                       | Planejado |
+| —    | python-service (FastAPI) — PDF, relatórios avançados | Planejado |
+| —    | Redis cache / pub-sub                                | Planejado |
+| —    | WebSocket / notificações realtime                    | Planejado |
+| —    | backend/ Express separado (se necessário escalar)    | Planejado |
 
 ## Segurança
 

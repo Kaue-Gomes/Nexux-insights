@@ -4,7 +4,11 @@ export function mapAuthError(error: AuthError): string {
   const message = error.message.toLowerCase();
   const code = error.code ?? "";
 
-  if (error.status === 429 || code === "over_email_send_rate_limit" || message.includes("rate limit")) {
+  if (
+    error.status === 429 ||
+    code === "over_email_send_rate_limit" ||
+    message.includes("rate limit")
+  ) {
     return "Limite de envio de e-mails atingido no Supabase. Aguarde ~1 hora ou desative a confirmação por e-mail em Authentication → Providers → Email no painel Supabase.";
   }
 

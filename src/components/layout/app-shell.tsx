@@ -4,7 +4,15 @@ import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
 import { CommandMenu } from "@/components/command-menu/command-menu";
 
-export function AppShell({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
+export function AppShell({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+}) {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />

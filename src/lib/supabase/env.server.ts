@@ -4,11 +4,7 @@ let cachedEnv: Record<string, string> | null = null;
 
 function getEnv(): Record<string, string> {
   if (!cachedEnv) {
-    cachedEnv = loadEnv(
-      process.env.NODE_ENV ?? "development",
-      process.cwd(),
-      "",
-    );
+    cachedEnv = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
   }
   return cachedEnv;
 }

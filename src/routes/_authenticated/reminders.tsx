@@ -7,13 +7,17 @@ import { ReminderFormDialog } from "@/components/forms/reminder-form-dialog";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { useReminders, useDeleteReminder } from "@/hooks/use-reminders";
 import { formatReminderDate, formatTime, reminderTypeLabels } from "@/lib/types/labels";
 import type { ReminderType } from "@/lib/types/database";
 
 export const Route = createFileRoute("/_authenticated/reminders")({
   head: () => ({
-    meta: [{ title: "Lembretes — Nexus" }, { name: "description", content: "Compromissos e notificações." }],
+    meta: [
+      { title: "Lembretes — Nexus" },
+      { name: "description", content: "Compromissos e notificações." },
+    ],
   }),
   component: RemindersPage,
 });
@@ -33,6 +37,14 @@ function RemindersPage() {
       </div>
       {isLoading ? (
         <TableSkeleton rows={5} />
+      ) : reminders.length === 0 ? (
+        <EmptyState
+          icon={Bell}
+          title="Nenhum lembrete agendado"
+          description="Crie lembretes para não perder compromissos e prazos importantes."
+          actionLabel="Novo lembrete"
+          onAction={() => setDialogOpen(true)}
+        />
       ) : (
         <div className="rounded-2xl bg-card border border-border shadow-sm divide-y divide-border">
           {reminders.map((r) => (
@@ -49,9 +61,7 @@ function RemindersPage() {
                   {formatReminderDate(r.reminder_date)} · {formatTime(r.reminder_time)}
                 </p>
               </div>
-              <Badge variant="secondary">
-                {reminderTypeLabels[r.type as ReminderType]}
-              </Badge>
+              <Badge variant="secondary">{reminderTypeLabels[r.type as ReminderType]}</Badge>
               <Button
                 variant="ghost"
                 size="sm"

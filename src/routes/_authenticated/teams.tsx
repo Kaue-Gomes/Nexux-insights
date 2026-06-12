@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { TeamFormDialog } from "@/components/forms/team-form-dialog";
 import { CardGridSkeleton } from "@/components/skeletons/card-grid-skeleton";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Progress } from "@/components/ui/progress";
 import { useTeams } from "@/hooks/use-teams";
 
 export const Route = createFileRoute("/_authenticated/teams")({
   head: () => ({
-    meta: [{ title: "Equipes — Nexus" }, { name: "description", content: "Equipes, líderes e desempenho." }],
+    meta: [
+      { title: "Equipes — Nexus" },
+      { name: "description", content: "Equipes, líderes e desempenho." },
+    ],
   }),
   component: TeamsPage,
 });
@@ -30,6 +34,14 @@ function TeamsPage() {
       </div>
       {isLoading ? (
         <CardGridSkeleton />
+      ) : teams.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="Nenhuma equipe cadastrada"
+          description="Crie sua primeira equipe para organizar membros e acompanhar a performance."
+          actionLabel="Nova equipe"
+          onAction={() => setDialogOpen(true)}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {teams.map((t) => (
@@ -43,9 +55,7 @@ function TeamsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">{t.name}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Liderada por {t.lead_name ?? "—"}
-                  </p>
+                  <p className="text-xs text-muted-foreground">Liderada por {t.lead_name ?? "—"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3 mt-4 text-center">

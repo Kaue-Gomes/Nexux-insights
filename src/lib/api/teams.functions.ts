@@ -7,10 +7,7 @@ export const listTeams = createServerFn({ method: "POST" })
   .inputValidator(accessTokenSchema)
   .handler(async ({ data }) => {
     const { client } = await requireAuth(data.accessToken);
-    const { data: teams, error } = await client
-      .from("teams")
-      .select("*")
-      .order("name");
+    const { data: teams, error } = await client.from("teams").select("*").order("name");
 
     if (error) throw new Error("Não foi possível carregar equipes.");
 

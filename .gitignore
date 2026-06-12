@@ -15,16 +15,31 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+
+# Secrets & environment (nunca versionar)
 .env
 .env.*
 !.env.example
+.dev.vars
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+*-credentials.json
+service-account*.json
+*.secret
 
 # Wrangler / Cloudflare
 .wrangler/
-.dev.vars
 
 # Lovable scaffolding (legacy)
 .lovable/
+
+# Cursor IDE
+.cursor/
+.cursorignore
 
 # Editor directories and files
 .vscode/*

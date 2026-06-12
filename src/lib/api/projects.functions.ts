@@ -63,9 +63,7 @@ export const createProject = createServerFn({ method: "POST" })
     await notifyProjectTeam(client, project.id, {
       type: isStarted ? "project_started" : "project_created",
       title: isStarted ? "Nova demanda iniciada" : "Novo projeto criado",
-      message: isStarted
-        ? `Projeto iniciado: "${data.name}"`
-        : `Novo projeto: "${data.name}"`,
+      message: isStarted ? `Projeto iniciado: "${data.name}"` : `Novo projeto: "${data.name}"`,
       entityType: "project",
       entityId: project.id,
     });

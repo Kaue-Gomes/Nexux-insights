@@ -3,12 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -43,7 +38,13 @@ export function TaskFormDialog({
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { title: "", project_id: "", priority: "medium", status: "backlog", due_date: "" },
+    defaultValues: {
+      title: "",
+      project_id: "",
+      priority: "medium",
+      status: "backlog",
+      due_date: "",
+    },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -84,7 +85,10 @@ export function TaskFormDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Prioridade</Label>
-              <Select defaultValue="medium" onValueChange={(v) => form.setValue("priority", v as FormData["priority"])}>
+              <Select
+                defaultValue="medium"
+                onValueChange={(v) => form.setValue("priority", v as FormData["priority"])}
+              >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue />
                 </SelectTrigger>
@@ -98,7 +102,10 @@ export function TaskFormDialog({
             </div>
             <div>
               <Label>Status</Label>
-              <Select defaultValue="backlog" onValueChange={(v) => form.setValue("status", v as FormData["status"])}>
+              <Select
+                defaultValue="backlog"
+                onValueChange={(v) => form.setValue("status", v as FormData["status"])}
+              >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue />
                 </SelectTrigger>

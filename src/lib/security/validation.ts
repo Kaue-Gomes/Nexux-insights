@@ -14,10 +14,14 @@ export type AccessTokenInput = z.infer<typeof accessTokenSchema>;
 
 /** Safe string for DB text fields — strips control chars, limits length */
 export function sanitizeText(value: string, maxLength = 500): string {
-  return value
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
-    .trim()
-    .slice(0, maxLength);
+  return (
+    value
+      // Remoção intencional de caracteres de controle (saneamento de segurança).
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+      .trim()
+      .slice(0, maxLength)
+  );
 }
 
 /** UUID allowlist — never interpolate into raw SQL */

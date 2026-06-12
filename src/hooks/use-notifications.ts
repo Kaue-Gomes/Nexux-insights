@@ -52,8 +52,7 @@ export function useNotifications() {
   }, [userId, queryClient]);
 
   const markRead = useMutation({
-    mutationFn: (id: string) =>
-      markNotificationRead({ data: { accessToken: accessToken!, id } }),
+    mutationFn: (id: string) => markNotificationRead({ data: { accessToken: accessToken!, id } }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.notifications }),
   });
 

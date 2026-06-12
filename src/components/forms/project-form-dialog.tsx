@@ -3,12 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -85,7 +80,10 @@ export function ProjectFormDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Status</Label>
-              <Select defaultValue="planning" onValueChange={(v) => form.setValue("status", v as FormData["status"])}>
+              <Select
+                defaultValue="planning"
+                onValueChange={(v) => form.setValue("status", v as FormData["status"])}
+              >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue />
                 </SelectTrigger>

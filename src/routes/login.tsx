@@ -22,10 +22,7 @@ export const Route = createFileRoute("/login")({
     if (session) throw redirect({ to: "/" });
   },
   head: () => ({
-    meta: [
-      { title: "Entrar — Nexus" },
-      { name: "description", content: "Acesse seu dashboard." },
-    ],
+    meta: [{ title: "Entrar — Nexus" }, { name: "description", content: "Acesse seu dashboard." }],
   }),
   component: LoginPage,
 });
@@ -106,7 +103,8 @@ function LoginPage() {
             <br /> uma única plataforma.
           </h2>
           <p className="mt-4 text-slate-400 max-w-md">
-            KPIs em tempo real, relatórios inteligentes e gestão de tarefas em uma interface moderna e responsiva.
+            KPIs em tempo real, relatórios inteligentes e gestão de tarefas em uma interface moderna
+            e responsiva.
           </p>
         </div>
         <p className="text-xs text-slate-500">© 2026 Nexus. Todos os direitos reservados.</p>
@@ -118,18 +116,30 @@ function LoginPage() {
             {mode === "login" ? "Bem-vindo de volta" : "Criar conta"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {mode === "login" ? "Entre com sua conta para continuar." : "Preencha os dados para começar."}
+            {mode === "login"
+              ? "Entre com sua conta para continuar."
+              : "Preencha os dados para começar."}
           </p>
 
           {mode === "login" ? (
             <form className="mt-8 space-y-4" onSubmit={onLogin}>
               <div>
                 <Label>E-mail</Label>
-                <Input type="email" placeholder="seu@email.com" className="mt-1.5 h-12 rounded-xl" {...loginForm.register("email")} />
+                <Input
+                  type="email"
+                  placeholder="seu@email.com"
+                  className="mt-1.5 h-12 rounded-xl"
+                  {...loginForm.register("email")}
+                />
               </div>
               <div>
                 <Label>Senha</Label>
-                <Input type="password" placeholder="••••••••" className="mt-1.5 h-12 rounded-xl" {...loginForm.register("password")} />
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  className="mt-1.5 h-12 rounded-xl"
+                  {...loginForm.register("password")}
+                />
               </div>
               <Button className="w-full h-12 rounded-xl" type="submit">
                 Entrar
@@ -139,15 +149,29 @@ function LoginPage() {
             <form className="mt-8 space-y-4" onSubmit={onRegister}>
               <div>
                 <Label>Nome completo</Label>
-                <Input placeholder="Seu nome" className="mt-1.5 h-12 rounded-xl" {...registerForm.register("fullName")} />
+                <Input
+                  placeholder="Seu nome"
+                  className="mt-1.5 h-12 rounded-xl"
+                  {...registerForm.register("fullName")}
+                />
               </div>
               <div>
                 <Label>E-mail</Label>
-                <Input type="email" placeholder="seu@email.com" className="mt-1.5 h-12 rounded-xl" {...registerForm.register("email")} />
+                <Input
+                  type="email"
+                  placeholder="seu@email.com"
+                  className="mt-1.5 h-12 rounded-xl"
+                  {...registerForm.register("email")}
+                />
               </div>
               <div>
                 <Label>Senha</Label>
-                <Input type="password" placeholder="••••••••" className="mt-1.5 h-12 rounded-xl" {...registerForm.register("password")} />
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  className="mt-1.5 h-12 rounded-xl"
+                  {...registerForm.register("password")}
+                />
               </div>
               <Button className="w-full h-12 rounded-xl" type="submit">
                 Criar conta
@@ -159,14 +183,22 @@ function LoginPage() {
             {mode === "login" ? (
               <>
                 Não tem conta?{" "}
-                <button type="button" className="text-primary font-medium hover:underline" onClick={() => setMode("register")}>
+                <button
+                  type="button"
+                  className="text-primary font-medium hover:underline"
+                  onClick={() => setMode("register")}
+                >
                   Criar conta
                 </button>
               </>
             ) : (
               <>
                 Já tem conta?{" "}
-                <button type="button" className="text-primary font-medium hover:underline" onClick={() => setMode("login")}>
+                <button
+                  type="button"
+                  className="text-primary font-medium hover:underline"
+                  onClick={() => setMode("login")}
+                >
                   Entrar
                 </button>
               </>

@@ -8,8 +8,7 @@ export function getSupabaseUrl(): string {
 
 export function getSupabaseAnonKey(): string {
   const key =
-    import.meta.env.VITE_SUPABASE_ANON_KEY ??
-    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
   if (!key) {
     throw new Error(

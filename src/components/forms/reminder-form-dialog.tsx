@@ -3,12 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -72,7 +67,10 @@ export function ReminderFormDialog({
           </div>
           <div>
             <Label>Tipo</Label>
-            <Select defaultValue="other" onValueChange={(v) => form.setValue("type", v as FormData["type"])}>
+            <Select
+              defaultValue="other"
+              onValueChange={(v) => form.setValue("type", v as FormData["type"])}
+            >
               <SelectTrigger className="mt-1.5">
                 <SelectValue />
               </SelectTrigger>

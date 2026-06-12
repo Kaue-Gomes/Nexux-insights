@@ -11,7 +11,10 @@ import { useAuth } from "@/providers/auth-provider";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
-    meta: [{ title: "Configurações — Nexus" }, { name: "description", content: "Preferências da conta." }],
+    meta: [
+      { title: "Configurações — Nexus" },
+      { name: "description", content: "Preferências da conta." },
+    ],
   }),
   component: SettingsPage,
 });

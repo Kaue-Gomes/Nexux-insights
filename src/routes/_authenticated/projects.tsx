@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, Users } from "lucide-react";
+import { FolderKanban, Plus, Users } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { ProjectFormDialog } from "@/components/forms/project-form-dialog";
 import { CardGridSkeleton } from "@/components/skeletons/card-grid-skeleton";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Progress } from "@/components/ui/progress";
+import { StatusBadge, type StatusTone } from "@/components/ui/status-badge";
 import { useProjects } from "@/hooks/use-projects";
 import { projectStatusLabels } from "@/lib/types/labels";
 import type { ProjectStatus } from "@/lib/types/database";
@@ -22,11 +23,11 @@ export const Route = createFileRoute("/_authenticated/projects")({
   component: ProjectsPage,
 });
 
-const statusVariant: Record<string, string> = {
-  in_progress: "bg-primary/10 text-primary",
-  completed: "bg-success/10 text-success",
-  overdue: "bg-destructive/10 text-destructive",
-  planning: "bg-muted text-muted-foreground",
+const statusTone: Record<string, StatusTone> = {
+  in_progress: "primary",
+  completed: "success",
+  overdue: "destructive",
+  planning: "neutral",
 };
 
 function ProjectsPage() {
@@ -34,20 +35,34 @@ function ProjectsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data, isLoading } = useProjects();
   const projects = data?.projects ?? [];
-  const filtered =
-    filter === "all" ? projects : projects.filter((p) => p.status === filter);
+  const filtered = filter === "all" ? projects : projects.filter((p) => p.status === filter);
 
   return (
-    <AppShell title="Projetos" subtitle="Gerencie e acompanhe todos os projetos da sua organização.">
+    <AppShell
+      title="Projetos"
+      subtitle="Gerencie e acompanhe todos os projetos da sua organização."
+    >
       <div className="flex items-center justify-between mb-6">
         <div className="flex gap-2 flex-wrap">
-          <Button variant={filter === "all" ? "secondary" : "ghost"} size="sm" onClick={() => setFilter("all")}>
+          <Button
+            variant={filter === "all" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setFilter("all")}
+          >
             Todos ({projects.length})
           </Button>
-          <Button variant={filter === "in_progress" ? "secondary" : "ghost"} size="sm" onClick={() => setFilter("in_progress")}>
+          <Button
+            variant={filter === "in_progress" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setFilter("in_progress")}
+          >
             Em andamento
           </Button>
-          <Button variant={filter === "completed" ? "secondary" : "ghost"} size="sm" onClick={() => setFilter("completed")}>
+          <Button
+            variant={filter === "completed" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setFilter("completed")}
+          >
             Concluídos
           </Button>
         </div>
@@ -58,6 +73,18 @@ function ProjectsPage() {
 
       {isLoading ? (
         <CardGridSkeleton />
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          icon={FolderKanban}
+          title="Nenhum projeto encontrado"
+          description={
+            filter === "all"
+              ? "Comece criando seu primeiro projeto para acompanhar o progresso da equipe."
+              : "Nenhum projeto corresponde a este filtro."
+          }
+          actionLabel="Novo projeto"
+          onAction={() => setDialogOpen(true)}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((p) => (
@@ -72,9 +99,10 @@ function ProjectsPage() {
                   </p>
                   <h3 className="font-semibold text-foreground mt-1">{p.name}</h3>
                 </div>
-                <Badge className={statusVariant[p.status]} variant="secondary">
-                  {projectStatusLabels[p.status as ProjectStatus]}
-                </Badge>
+                <StatusBadge
+                  tone={statusTone[p.status] ?? "neutral"}
+                  label={projectStatusLabels[p.status as ProjectStatus]}
+                />
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-muted-foreground">
@@ -90,7 +118,9 @@ function ProjectsPage() {
                 </span>
                 <span>
                   Entrega:{" "}
-                  {p.due_date ? new Date(p.due_date + "T00:00:00").toLocaleDateString("pt-BR") : "—"}
+                  {p.due_date
+                    ? new Date(p.due_date + "T00:00:00").toLocaleDateString("pt-BR")
+                    : "—"}
                 </span>
               </div>
             </div>

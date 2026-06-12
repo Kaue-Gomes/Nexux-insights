@@ -20,12 +20,20 @@ import {
   YAxis,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import {
+  chartTooltipItemStyle,
+  chartTooltipLabelStyle,
+  chartTooltipStyle,
+} from "@/lib/chart";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Dashboard — Nexus" },
-      { name: "description", content: "Painel central de indicadores, projetos, tarefas e equipes." },
+      {
+        name: "description",
+        content: "Painel central de indicadores, projetos, tarefas e equipes.",
+      },
     ],
   }),
   component: Dashboard,
@@ -43,6 +51,8 @@ function Dashboard() {
       </AppShell>
     );
   }
+
+  const topDeliveries = Math.max(...data.teamPerformance.map((t) => t.entregas));
 
   return (
     <AppShell
@@ -86,15 +96,46 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v / 1000}k`} />
+                <CartesianGrid
+                  stroke="var(--color-border)"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="mes"
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(v) => `R$${v / 1000}k`}
+                />
                 <Tooltip
-                  contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }}
+                  contentStyle={chartTooltipStyle}
+                  itemStyle={chartTooltipItemStyle}
+                  labelStyle={chartTooltipLabelStyle}
                   formatter={(v: number) => `R$ ${v.toLocaleString("pt-BR")}`}
                 />
-                <Area type="monotone" dataKey="receita" stroke="var(--color-primary)" strokeWidth={2.5} fill="url(#g1)" />
-                <Area type="monotone" dataKey="meta" stroke="var(--color-accent)" strokeWidth={2} strokeDasharray="4 4" fill="url(#g2)" />
+                <Area
+                  type="monotone"
+                  dataKey="receita"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2.5}
+                  fill="url(#g1)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="meta"
+                  stroke="var(--color-accent)"
+                  strokeWidth={2}
+                  strokeDasharray="4 4"
+                  fill="url(#g2)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -106,12 +147,23 @@ function Dashboard() {
           <div className="h-56 mt-2">
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={data.taskStatusData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={85} paddingAngle={2}>
+                <Pie
+                  data={data.taskStatusData}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={55}
+                  outerRadius={85}
+                  paddingAngle={2}
+                >
                   {data.taskStatusData.map((d, i) => (
                     <Cell key={i} fill={d.color} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                  itemStyle={chartTooltipItemStyle}
+                  labelStyle={chartTooltipLabelStyle}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -138,12 +190,40 @@ function Dashboard() {
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={data.teamPerformance}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="equipe" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
+                <CartesianGrid
+                  stroke="var(--color-border)"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="equipe"
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                  itemStyle={chartTooltipItemStyle}
+                  labelStyle={chartTooltipLabelStyle}
+                  cursor={{ fill: "var(--color-muted)", opacity: 0.4 }}
+                />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="entregas" fill="var(--color-primary)" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="entregas" fill="var(--color-primary)" radius={[6, 6, 0, 0]}>
+                  {data.teamPerformance.map((entry, index) => (
+                    <Cell
+                      key={index}
+                      fill="var(--color-primary)"
+                      fillOpacity={entry.entregas === topDeliveries ? 1 : 0.35}
+                    />
+                  ))}
+                </Bar>
                 <Bar dataKey="eficiencia" fill="var(--color-accent)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -155,7 +235,10 @@ function Dashboard() {
           <p className="text-sm text-muted-foreground mb-4">Sua agenda</p>
           <ul className="space-y-3">
             {data.reminders.map((r) => (
-              <li key={r.id} className="flex items-start gap-3 p-2 rounded-xl hover:bg-muted/50 transition-all duration-200">
+              <li
+                key={r.id}
+                className="flex items-start gap-3 p-2 rounded-xl hover:bg-muted/50 transition-all duration-200"
+              >
                 <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-primary/10 text-primary shrink-0">
                   <span className="text-[10px] font-medium uppercase">{r.date.slice(0, 3)}</span>
                   <span className="text-xs font-bold">{r.time}</span>

@@ -78,7 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Nexus Insights" },
-      { name: "description", content: "Dashboard empresarial inteligente — KPIs, projetos, tarefas e equipes." },
+      {
+        name: "description",
+        content: "Dashboard empresarial inteligente — KPIs, projetos, tarefas e equipes.",
+      },
       { name: "author", content: "Nexus" },
       { property: "og:title", content: "Nexus Insights" },
       { property: "og:description", content: "Dashboard empresarial inteligente" },

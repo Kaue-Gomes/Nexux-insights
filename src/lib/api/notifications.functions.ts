@@ -21,8 +21,7 @@ export const listNotifications = createServerFn({ method: "POST" })
 
     if (error) throw new Error("Não foi possível carregar notificações.");
 
-    const unreadCount =
-      notifications?.filter((n) => !n.read_at).length ?? 0;
+    const unreadCount = notifications?.filter((n) => !n.read_at).length ?? 0;
 
     return { notifications: notifications ?? [], unreadCount };
   });

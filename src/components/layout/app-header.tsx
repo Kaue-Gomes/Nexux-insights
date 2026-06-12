@@ -34,7 +34,9 @@ export function AppHeader({ title, subtitle }: { title: string; subtitle?: strin
   };
 
   const openCommand = () => {
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }),
+    );
   };
 
   return (
@@ -61,8 +63,11 @@ export function AppHeader({ title, subtitle }: { title: string; subtitle?: strin
         <NotificationBell />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button type="button" className="flex items-center gap-2 rounded-xl hover:bg-muted/50 p-1 transition-all duration-200">
-              <Avatar className="h-9 w-9">
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded-xl hover:bg-muted/50 p-1 transition-all duration-200"
+            >
+              <Avatar className="h-9 w-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-background">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
                   {initials}
                 </AvatarFallback>
@@ -73,7 +78,9 @@ export function AppHeader({ title, subtitle }: { title: string; subtitle?: strin
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>Configurações</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>
+              Configurações
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive">
               <LogOut className="h-4 w-4 mr-2" />

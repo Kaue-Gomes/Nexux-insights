@@ -22,22 +22,13 @@ export const getDashboardSummary = createServerFn({ method: "POST" })
         client.from("projects").select("id, status"),
         client.from("tasks").select("id, status, due_date"),
         client.from("teams").select("id, name, performance"),
-        client
-          .from("revenue_snapshots")
-          .select("*")
-          .eq("user_id", userId)
-          .order("sort_order"),
+        client.from("revenue_snapshots").select("*").eq("user_id", userId).order("sort_order"),
         client
           .from("activities")
           .select("id, action, target, created_at, profiles(full_name)")
           .order("created_at", { ascending: false })
           .limit(6),
-        client
-          .from("reminders")
-          .select("*")
-          .eq("user_id", userId)
-          .order("reminder_date")
-          .limit(5),
+        client.from("reminders").select("*").eq("user_id", userId).order("reminder_date").limit(5),
       ]);
 
     const projects = projectsRes.data ?? [];
@@ -137,11 +128,7 @@ export const getReportsSummary = createServerFn({ method: "POST" })
     const { client, userId } = await requireAuth(data.accessToken);
 
     const [revenueRes, teamsRes, projectsRes] = await Promise.all([
-      client
-        .from("revenue_snapshots")
-        .select("*")
-        .eq("user_id", userId)
-        .order("sort_order"),
+      client.from("revenue_snapshots").select("*").eq("user_id", userId).order("sort_order"),
       client.from("teams").select("id, name, performance"),
       client.from("projects").select("id, name, status, progress, due_date"),
     ]);
