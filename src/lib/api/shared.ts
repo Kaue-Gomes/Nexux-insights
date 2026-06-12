@@ -39,19 +39,21 @@ export type NotificationPayload = {
   entityId?: string;
 };
 
-/** Notify team members via SECURITY DEFINER RPC (parameterized — no SQL injection) */
-export async function notifyProjectTeam(
-  client: ReturnType<typeof createAuthenticatedClient>,
-  projectId: string,
+type AuthenticatedClient = ReturnType<typeof createAuthenticatedClient>;
+
+/**
+ * Cria notificacoes para um conjunto de usuarios via RPC parametrizado
+ * (SECURITY DEFINER — sem injecao de SQL). Sanitiza titulo/mensagem.
+ */
+async function createNotifications(
+  client: AuthenticatedClient,
+  userIds: string[],
   payload: NotificationPayload,
 ) {
-  const { data: memberIds, error: idsError } = await client.rpc("get_project_team_member_ids", {
-    p_project_id: projectId,
-  });
-  if (idsError || !memberIds?.length) return;
+  if (!userIds.length) return;
 
   await client.rpc("create_notifications", {
-    p_user_ids: memberIds,
+    p_user_ids: userIds,
     p_type: payload.type,
     p_title: sanitizeText(payload.title, 200),
     p_message: sanitizeText(payload.message, 500),
@@ -60,31 +62,25 @@ export async function notifyProjectTeam(
   });
 }
 
-/** Notify a specific user (e.g. assignee) */
-export async function notifyUser(
-  client: ReturnType<typeof createAuthenticatedClient>,
-  userId: string,
-  actorId: string,
+/** Notify team members via SECURITY DEFINER RPC (parameterized — no SQL injection) */
+export async function notifyProjectTeam(
+  client: AuthenticatedClient,
+  projectId: string,
   payload: NotificationPayload,
 ) {
-  if (userId === actorId) {
-    await client.rpc("create_notifications", {
-      p_user_ids: [userId],
-      p_type: payload.type,
-      p_title: sanitizeText(payload.title, 200),
-      p_message: sanitizeText(payload.message, 500),
-      p_entity_type: payload.entityType ?? null,
-      p_entity_id: payload.entityId ?? null,
-    });
-    return;
-  }
-
-  await client.rpc("create_notifications", {
-    p_user_ids: [userId],
-    p_type: payload.type,
-    p_title: sanitizeText(payload.title, 200),
-    p_message: sanitizeText(payload.message, 500),
-    p_entity_type: payload.entityType ?? null,
-    p_entity_id: payload.entityId ?? null,
+  const { data: memberIds, error: idsError } = await client.rpc("get_project_team_member_ids", {
+    p_project_id: projectId,
   });
+  if (idsError || !memberIds?.length) return;
+
+  await createNotifications(client, memberIds, payload);
+}
+
+/** Notify a specific user (e.g. assignee) */
+export async function notifyUser(
+  client: AuthenticatedClient,
+  userId: string,
+  payload: NotificationPayload,
+) {
+  await createNotifications(client, [userId], payload);
 }

@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { ChartLegend, SectionCard } from "@/components/dashboard/section-card";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { useAuth } from "@/providers/auth-provider";
@@ -11,7 +12,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -21,6 +21,9 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import {
+  chartAxisProps,
+  chartBarCursor,
+  chartGridProps,
   chartTooltipItemStyle,
   chartTooltipLabelStyle,
   chartTooltipStyle,
@@ -53,6 +56,7 @@ function Dashboard() {
   }
 
   const topDeliveries = Math.max(...data.teamPerformance.map((t) => t.entregas));
+  const totalTasks = data.taskStatusData.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <AppShell
@@ -61,28 +65,24 @@ function Dashboard() {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {data.kpis.map((k, i) => (
-          <StatCard key={k.label} {...k} icon={k.icon as never} tintIndex={i} />
+          <StatCard key={k.label} {...k} tintIndex={i} />
         ))}
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mt-6">
-        <div className="xl:col-span-8 rounded-2xl bg-card border border-border p-6 shadow-sm hover:-translate-y-0.5 transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Receita vs. Meta</h3>
-              <p className="text-sm text-muted-foreground">Últimos 7 meses</p>
-            </div>
-            <div className="flex gap-3 text-xs">
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-primary" />
-                Receita
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-accent" />
-                Meta
-              </span>
-            </div>
-          </div>
+        <SectionCard
+          className="xl:col-span-8"
+          title="Receita vs. Meta"
+          subtitle="Últimos 7 meses"
+          action={
+            <ChartLegend
+              items={[
+                { label: "Receita", color: "var(--color-primary)" },
+                { label: "Meta", color: "var(--color-accent)" },
+              ]}
+            />
+          }
+        >
           <div className="h-72">
             <ResponsiveContainer>
               <AreaChart data={data.revenueData}>
@@ -96,25 +96,9 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid
-                  stroke="var(--color-border)"
-                  strokeDasharray="3 3"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="mes"
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(v) => `R$${v / 1000}k`}
-                />
+                <CartesianGrid {...chartGridProps} vertical={false} />
+                <XAxis dataKey="mes" {...chartAxisProps} />
+                <YAxis {...chartAxisProps} tickFormatter={(v) => `R$${v / 1000}k`} />
                 <Tooltip
                   contentStyle={chartTooltipStyle}
                   itemStyle={chartTooltipItemStyle}
@@ -139,21 +123,25 @@ function Dashboard() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
 
-        <div className="xl:col-span-4 rounded-2xl bg-card border border-border p-6 shadow-sm hover:-translate-y-0.5 transition-all duration-200">
-          <h3 className="text-lg font-semibold text-foreground">Status de tarefas</h3>
-          <p className="text-sm text-muted-foreground">Distribuição atual</p>
-          <div className="h-56 mt-2">
+        <SectionCard
+          className="xl:col-span-4"
+          title="Status de tarefas"
+          subtitle="Distribuição atual"
+        >
+          <div className="relative h-56">
             <ResponsiveContainer>
               <PieChart>
                 <Pie
                   data={data.taskStatusData}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={55}
+                  innerRadius={60}
                   outerRadius={85}
-                  paddingAngle={2}
+                  paddingAngle={3}
+                  cornerRadius={6}
+                  stroke="none"
                 >
                   {data.taskStatusData.map((d, i) => (
                     <Cell key={i} fill={d.color} />
@@ -166,8 +154,14 @@ function Dashboard() {
                 />
               </PieChart>
             </ResponsiveContainer>
+            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-semibold tracking-tight text-foreground">
+                {totalTasks}
+              </span>
+              <span className="text-xs text-muted-foreground">tarefas</span>
+            </div>
           </div>
-          <div className="space-y-2 mt-2">
+          <div className="space-y-2 mt-4">
             {data.taskStatusData.map((d) => (
               <div key={d.name} className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-muted-foreground">
@@ -178,44 +172,36 @@ function Dashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </SectionCard>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mt-6">
-        <div className="xl:col-span-8 rounded-2xl bg-card border border-border p-6 shadow-sm hover:-translate-y-0.5 transition-all duration-200">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-foreground">Desempenho por equipe</h3>
-            <p className="text-sm text-muted-foreground">Entregas no mês</p>
-          </div>
+        <SectionCard
+          className="xl:col-span-8"
+          title="Desempenho por equipe"
+          subtitle="Entregas no mês"
+          action={
+            <ChartLegend
+              items={[
+                { label: "Entregas", color: "var(--color-primary)" },
+                { label: "Eficiência", color: "var(--color-accent)" },
+              ]}
+            />
+          }
+        >
           <div className="h-64">
             <ResponsiveContainer>
-              <BarChart data={data.teamPerformance}>
-                <CartesianGrid
-                  stroke="var(--color-border)"
-                  strokeDasharray="3 3"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="equipe"
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
+              <BarChart data={data.teamPerformance} barGap={6}>
+                <CartesianGrid {...chartGridProps} vertical={false} />
+                <XAxis dataKey="equipe" {...chartAxisProps} />
+                <YAxis {...chartAxisProps} />
                 <Tooltip
                   contentStyle={chartTooltipStyle}
                   itemStyle={chartTooltipItemStyle}
                   labelStyle={chartTooltipLabelStyle}
-                  cursor={{ fill: "var(--color-muted)", opacity: 0.4 }}
+                  cursor={chartBarCursor}
                 />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="entregas" fill="var(--color-primary)" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="entregas" radius={[8, 8, 0, 0]} maxBarSize={36}>
                   {data.teamPerformance.map((entry, index) => (
                     <Cell
                       key={index}
@@ -224,15 +210,18 @@ function Dashboard() {
                     />
                   ))}
                 </Bar>
-                <Bar dataKey="eficiencia" fill="var(--color-accent)" radius={[6, 6, 0, 0]} />
+                <Bar
+                  dataKey="eficiencia"
+                  fill="var(--color-accent)"
+                  radius={[8, 8, 0, 0]}
+                  maxBarSize={36}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
 
-        <div className="xl:col-span-4 rounded-2xl bg-card border border-border p-6 shadow-sm hover:-translate-y-0.5 transition-all duration-200">
-          <h3 className="text-lg font-semibold text-foreground">Próximos lembretes</h3>
-          <p className="text-sm text-muted-foreground mb-4">Sua agenda</p>
+        <SectionCard className="xl:col-span-4" title="Próximos lembretes" subtitle="Sua agenda">
           <ul className="space-y-3">
             {data.reminders.map((r) => (
               <li
@@ -252,11 +241,10 @@ function Dashboard() {
               </li>
             ))}
           </ul>
-        </div>
+        </SectionCard>
       </div>
 
-      <div className="rounded-2xl bg-card border border-border p-6 shadow-sm mt-6 hover:-translate-y-0.5 transition-all duration-200">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Atividade recente</h3>
+      <SectionCard className="mt-6" title="Atividade recente">
         <ul className="divide-y divide-border">
           {data.activities.map((a) => (
             <li key={a.id} className="flex items-center justify-between py-3 text-sm">
@@ -278,7 +266,7 @@ function Dashboard() {
             </li>
           ))}
         </ul>
-      </div>
+      </SectionCard>
     </AppShell>
   );
 }

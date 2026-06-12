@@ -21,3 +21,24 @@ export const chartTooltipLabelStyle: CSSProperties = {
 export const chartTooltipItemStyle: CSSProperties = {
   color: "var(--color-foreground)",
 };
+
+/**
+ * Props padrao para eixos do Recharts: tipografia discreta, sem linhas de eixo
+ * nem ticks, usando o token de texto secundario. Reaproveitado entre graficos.
+ */
+export const chartAxisProps = {
+  stroke: "var(--color-muted-foreground)",
+  fontSize: 12,
+  tickLine: false,
+  axisLine: false,
+} as const;
+
+/** Grade cartesiana leve (apenas referencia visual, sem poluir o grafico). */
+export const chartGridProps = {
+  stroke: "var(--color-border)",
+  strokeDasharray: "3 3",
+  strokeOpacity: 0.6,
+} as const;
+
+/** Realce do cursor (hover) em graficos de barra. */
+export const chartBarCursor = { fill: "var(--color-muted)", opacity: 0.4 } as const;

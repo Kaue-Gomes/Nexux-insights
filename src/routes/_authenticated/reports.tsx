@@ -6,7 +6,6 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,9 +13,13 @@ import {
 } from "recharts";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { ChartLegend, SectionCard } from "@/components/dashboard/section-card";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { Button } from "@/components/ui/button";
 import {
+  chartAxisProps,
+  chartBarCursor,
+  chartGridProps,
   chartTooltipItemStyle,
   chartTooltipLabelStyle,
   chartTooltipStyle,
@@ -99,36 +102,29 @@ function ReportsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-foreground mb-1">Evolução de receita</h3>
-          <p className="text-sm text-muted-foreground mb-4">Comparativo mensal</p>
+        <SectionCard
+          title="Evolução de receita"
+          subtitle="Comparativo mensal"
+          action={
+            <ChartLegend
+              items={[
+                { label: "Receita", color: "var(--color-primary)" },
+                { label: "Meta", color: "var(--color-accent)" },
+              ]}
+            />
+          }
+        >
           <div className="h-64">
             <ResponsiveContainer>
               <LineChart data={data.revenueData}>
-                <CartesianGrid
-                  stroke="var(--color-border)"
-                  strokeDasharray="3 3"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="mes"
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <CartesianGrid {...chartGridProps} vertical={false} />
+                <XAxis dataKey="mes" {...chartAxisProps} />
+                <YAxis {...chartAxisProps} />
                 <Tooltip
                   contentStyle={chartTooltipStyle}
                   itemStyle={chartTooltipItemStyle}
                   labelStyle={chartTooltipLabelStyle}
                 />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Line
                   type="monotone"
                   dataKey="receita"
@@ -147,46 +143,31 @@ function ReportsPage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
 
-        <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-foreground mb-1">Eficiência por equipe</h3>
-          <p className="text-sm text-muted-foreground mb-4">Maior é melhor</p>
+        <SectionCard title="Eficiência por equipe" subtitle="Maior é melhor">
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={data.teamPerformance} layout="vertical">
-                <CartesianGrid
-                  stroke="var(--color-border)"
-                  strokeDasharray="3 3"
-                  horizontal={false}
-                />
-                <XAxis
-                  type="number"
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  dataKey="equipe"
-                  type="category"
-                  stroke="var(--color-muted-foreground)"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  width={80}
-                />
+                <CartesianGrid {...chartGridProps} horizontal={false} />
+                <XAxis type="number" {...chartAxisProps} />
+                <YAxis dataKey="equipe" type="category" {...chartAxisProps} width={80} />
                 <Tooltip
                   contentStyle={chartTooltipStyle}
                   itemStyle={chartTooltipItemStyle}
                   labelStyle={chartTooltipLabelStyle}
-                  cursor={{ fill: "var(--color-muted)", opacity: 0.4 }}
+                  cursor={chartBarCursor}
                 />
-                <Bar dataKey="eficiencia" fill="var(--color-accent)" radius={[0, 6, 6, 0]} />
+                <Bar
+                  dataKey="eficiencia"
+                  fill="var(--color-accent)"
+                  radius={[0, 8, 8, 0]}
+                  maxBarSize={28}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
       </div>
     </AppShell>
   );

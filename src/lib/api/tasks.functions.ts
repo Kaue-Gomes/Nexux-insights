@@ -82,7 +82,7 @@ export const createTask = createServerFn({ method: "POST" })
       entityId: task.id,
     });
 
-    await notifyUser(client, assigneeId, userId, {
+    await notifyUser(client, assigneeId, {
       type: "task_created",
       title: "Demanda atribuída a você",
       message: `Você foi designado para: "${data.title}"`,

@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
-import { StatusBadge, type StatusTone } from "@/components/ui/status-badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useTasks, useUpdateTask } from "@/hooks/use-tasks";
 import { taskPriorityLabels, taskStatusLabels } from "@/lib/types/labels";
+import { taskPriorityTones, taskStatusTones } from "@/lib/types/status-tone";
 import type { TaskPriority, TaskStatus } from "@/lib/types/database";
 
 export const Route = createFileRoute("/_authenticated/tasks")({
@@ -24,19 +25,6 @@ export const Route = createFileRoute("/_authenticated/tasks")({
   }),
   component: TasksPage,
 });
-
-const priorityTone: Record<string, StatusTone> = {
-  low: "neutral",
-  medium: "info",
-  high: "warning",
-  critical: "destructive",
-};
-const statusTone: Record<string, StatusTone> = {
-  backlog: "neutral",
-  in_progress: "primary",
-  review: "accent",
-  done: "success",
-};
 
 function TasksPage() {
   const [filter, setFilter] = useState<"all" | "mine" | "overdue" | "done">("all");
@@ -158,13 +146,13 @@ function TasksPage() {
                 </div>
                 <div className="col-span-2">
                   <StatusBadge
-                    tone={priorityTone[t.priority] ?? "neutral"}
+                    tone={taskPriorityTones[t.priority as TaskPriority]}
                     label={taskPriorityLabels[t.priority as TaskPriority]}
                   />
                 </div>
                 <div className="col-span-2">
                   <StatusBadge
-                    tone={statusTone[t.status] ?? "neutral"}
+                    tone={taskStatusTones[t.status as TaskStatus]}
                     label={taskStatusLabels[t.status as TaskStatus]}
                   />
                 </div>

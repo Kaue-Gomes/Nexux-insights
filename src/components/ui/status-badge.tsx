@@ -1,13 +1,5 @@
 import { cn } from "@/lib/utils";
-
-export type StatusTone =
-  | "neutral"
-  | "primary"
-  | "success"
-  | "warning"
-  | "destructive"
-  | "info"
-  | "accent";
+import type { StatusTone } from "@/lib/types/status-tone";
 
 const toneStyles: Record<StatusTone, string> = {
   neutral: "bg-muted text-muted-foreground",

@@ -5,14 +5,18 @@ export function DashboardSkeleton() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-[130px] rounded-2xl" />
+          <Skeleton key={i} className="h-[140px] rounded-2xl" />
         ))}
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <Skeleton className="xl:col-span-8 h-96 rounded-2xl" />
+        <Skeleton className="xl:col-span-4 h-96 rounded-2xl" />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <Skeleton className="xl:col-span-8 h-80 rounded-2xl" />
         <Skeleton className="xl:col-span-4 h-80 rounded-2xl" />
       </div>
-      <Skeleton className="h-48 rounded-2xl" />
+      <Skeleton className="h-56 rounded-2xl" />
     </div>
   );
 }

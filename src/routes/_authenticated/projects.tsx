@@ -8,9 +8,10 @@ import { CardGridSkeleton } from "@/components/skeletons/card-grid-skeleton";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Progress } from "@/components/ui/progress";
-import { StatusBadge, type StatusTone } from "@/components/ui/status-badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useProjects } from "@/hooks/use-projects";
 import { projectStatusLabels } from "@/lib/types/labels";
+import { projectStatusTones } from "@/lib/types/status-tone";
 import type { ProjectStatus } from "@/lib/types/database";
 
 export const Route = createFileRoute("/_authenticated/projects")({
@@ -22,13 +23,6 @@ export const Route = createFileRoute("/_authenticated/projects")({
   }),
   component: ProjectsPage,
 });
-
-const statusTone: Record<string, StatusTone> = {
-  in_progress: "primary",
-  completed: "success",
-  overdue: "destructive",
-  planning: "neutral",
-};
 
 function ProjectsPage() {
   const [filter, setFilter] = useState<ProjectStatus | "all">("all");
@@ -100,7 +94,7 @@ function ProjectsPage() {
                   <h3 className="font-semibold text-foreground mt-1">{p.name}</h3>
                 </div>
                 <StatusBadge
-                  tone={statusTone[p.status] ?? "neutral"}
+                  tone={projectStatusTones[p.status as ProjectStatus]}
                   label={projectStatusLabels[p.status as ProjectStatus]}
                 />
               </div>
