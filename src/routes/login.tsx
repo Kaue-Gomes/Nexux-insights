@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,17 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
-import { getSupabaseClient } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/login")({
   validateSearch: z.object({ redirect: z.string().optional() }),
-  beforeLoad: async () => {
-    const supabase = getSupabaseClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session) throw redirect({ to: "/" });
-  },
   head: () => ({
     meta: [{ title: "Entrar — Nexus" }, { name: "description", content: "Acesse seu dashboard." }],
   }),
@@ -38,9 +30,15 @@ const registerSchema = loginSchema.extend({
 
 function LoginPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
-  const { signIn, signUp, loading } = useAuth();
+  const { signIn, signUp, loading, session } = useAuth();
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
+
+  useEffect(() => {
+    if (!loading && session) {
+      navigate({ to: redirect ?? "/", replace: true });
+    }
+  }, [loading, session, redirect, navigate]);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -76,7 +74,7 @@ function LoginPage() {
     }
   });
 
-  if (loading) {
+  if (loading || session) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">Carregando...</p>

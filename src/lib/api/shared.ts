@@ -1,9 +1,11 @@
 import type { AuthenticatedContext } from "@/lib/security/jwt.server";
 import { requireAuthenticatedUser } from "@/lib/security/jwt.server";
-import { sanitizeText } from "@/lib/security/validation";
+import { accessTokenSchema, sanitizeText } from "@/lib/security/validation";
+import type { AccessTokenInput } from "@/lib/security/validation";
 import { createAuthenticatedClient } from "@/lib/supabase/server";
 
-export { accessTokenSchema, type AccessTokenInput } from "@/lib/security/validation";
+export { accessTokenSchema };
+export type { AccessTokenInput };
 
 export function getAuthedClient(accessToken: string) {
   return createAuthenticatedClient(accessToken);
